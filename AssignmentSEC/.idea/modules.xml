@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC_main.iml" group="AssignmentSEC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC_test.iml" group="AssignmentSEC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin.iml" group="ars-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_main.iml" group="ars-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_test.iml" group="ars-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin.iml" group="bbc-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin_main.iml" group="bbc-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/bbc-plugin/bbc-plugin_test.iml" group="bbc-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core.iml" group="core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core_main.iml" group="core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core_test.iml" group="core" />
+      <module fileurl="file://$PROJECT_DIR$/ars-plugin/src/main/main.iml" filepath="$PROJECT_DIR$/ars-plugin/src/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin.iml" group="nytimes-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin_main.iml" group="nytimes-plugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/nytimes-plugin/nytimes-plugin_test.iml" group="nytimes-plugin" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="ars-plugin_main" target="1.8" />
+      <module name="ars-plugin_test" target="1.8" />
+      <module name="Assignment_main" target="1.8" />
+      <module name="Assignment_test" target="1.8" />
+      <module name="AssignmentSEC_main" target="1.8" />
+      <module name="AssignmentSEC_test" target="1.8" />
+      <module name="bbc-plugin_main" target="1.8" />
+      <module name="bbc-plugin_test" target="1.8" />
+      <module name="core_main" target="1.8" />
+      <module name="core_test" target="1.8" />
+      <module name="nytimes-plugin_main" target="1.8" />
+      <module name="nytimes-plugin_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
