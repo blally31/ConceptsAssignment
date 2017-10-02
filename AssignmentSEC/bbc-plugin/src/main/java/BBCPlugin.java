@@ -9,6 +9,7 @@ public class BBCPlugin extends NewsPlugin {
 
         this.name = "BBCPlugin";
         this.updateFrequency = 15;
+        this.data = new StringBuilder();
 
         try {
             this.url = new URL("http://www.bbc.co.uk/news/");

@@ -9,6 +9,7 @@ public class NYTimesPlugin extends NewsPlugin {
 
         this.name = "NYTimesPlugin";
         this.updateFrequency = 20;
+        this.data = new StringBuilder();
 
         try {
             this.url = new URL("https://www.nytimes.com/");

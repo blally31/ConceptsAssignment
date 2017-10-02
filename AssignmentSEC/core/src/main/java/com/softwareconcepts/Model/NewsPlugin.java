@@ -12,6 +12,8 @@ public abstract class NewsPlugin {
     protected String name;
     protected URL url;
     protected int updateFrequency;
+    protected StringBuilder data;
+
 
     public String getName() {
         return name;
@@ -34,9 +36,12 @@ public abstract class NewsPlugin {
 
             int bytesRead = channel.read(buffer);
             while (bytesRead != -1) {
-
+                String str = new String(array, "UTF-8");
+                data.append(str);
+                buffer.clear();
+                bytesRead = channel.read(buffer);
             }
-
+            System.out.println(data);
         }
         catch (ClosedByInterruptException e) {
 

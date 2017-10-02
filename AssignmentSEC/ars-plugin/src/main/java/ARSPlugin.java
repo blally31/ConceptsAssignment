@@ -9,6 +9,7 @@ public class ARSPlugin extends NewsPlugin {
 
         this.name = "ARSPlugin";
         this.updateFrequency = 10;
+        this.data = new StringBuilder();
 
         try {
             this.url = new URL("https://arstechnica.com/");

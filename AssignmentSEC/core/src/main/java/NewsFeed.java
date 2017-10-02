@@ -1,5 +1,4 @@
 import com.softwareconcepts.Controller.NFController;
-import com.softwareconcepts.Controller.PageDownloader;
 import com.softwareconcepts.Model.NewsPlugin;
 import com.softwareconcepts.PluginLoader;
 import com.softwareconcepts.View.NFWindow;
