@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC_main.iml" group="AssignmentSEC" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AssignmentSEC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/AssignmentSEC_test.iml" group="AssignmentSEC" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin.iml" group="ars-plugin" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_main.iml" group="ars-plugin" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ars-plugin/ars-plugin_test.iml" group="ars-plugin" />

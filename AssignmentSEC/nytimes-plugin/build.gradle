@@ -3,3 +3,7 @@ jar {
         attributes 'Plugin-Class': 'NYTimesPlugin'
     }
 }
+
+dependencies {
+    compile project(':core')
+}

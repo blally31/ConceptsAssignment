@@ -3,3 +3,7 @@ jar {
         attributes 'Plugin-Class': 'BBCPlugin'
     }
 }
+
+dependencies {
+    compile project(':core')
+}

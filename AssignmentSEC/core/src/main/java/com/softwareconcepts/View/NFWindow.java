@@ -43,6 +43,7 @@ public class NFWindow extends JFrame {
             }
         });
 
+        //Main GUI container that holds all the different panels.
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(timePanel, BorderLayout.NORTH);

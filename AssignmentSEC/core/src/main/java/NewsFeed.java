@@ -25,9 +25,12 @@ public class NewsFeed {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                System.out.println("Starting GUI");
                 NFWindow window = new NFWindow(controller);
                 controller.setWindow(window);
                 window.setVisible(true);
+                // Start download timers
+                controller.startDownload();
             }
         });
     }

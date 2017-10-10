@@ -1,20 +1,13 @@
 group 'com.softwareconcepts'
 version '1.0-SNAPSHOT'
 
-allprojects {
+subprojects {
     apply plugin: 'java'
 
     repositories {
         mavenCentral()
     }
+
+
 }
 
-subprojects {
-    dependencies {
-        compile project(':core')
-    }
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
