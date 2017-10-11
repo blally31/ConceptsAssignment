@@ -7,7 +7,7 @@ public class ARSPlugin extends NewsPlugin {
 
     public ARSPlugin() {
 
-        this.name = "ARSPlugin";
+        this.name = "arstechnica.com";
         this.updateFrequency = 10;
         this.data = new StringBuilder();
 

@@ -1,5 +1,7 @@
 package com.softwareconcepts.Model;
 
+import com.softwareconcepts.View.NFWindow;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -29,7 +31,7 @@ public abstract class NewsPlugin {
         return updateFrequency * 60000 ;
     }
 
-    public void download() {
+    public void download(NFWindow window) {
 
         try(ReadableByteChannel channel = Channels.newChannel(url.openStream())) {
 
@@ -44,8 +46,7 @@ public abstract class NewsPlugin {
                 buffer.clear();
                 bytesRead = channel.read(buffer);
             }
-            //System.out.println(data);
-            parseHTML(data.toString());
+            parseHTML(window, data.toString());
         }
         catch (ClosedByInterruptException e) {
 
@@ -55,19 +56,20 @@ public abstract class NewsPlugin {
         }
     }
 
-    public static void parseHTML(String html) {
-        //Add each news headline into a list/container
-        //Pattern p = Pattern.compile("<h1 class=\"heading\"><a href=\"(.*?)\">(\\w+)</a></h2>", Pattern.MULTILINE);
-        Pattern p = Pattern.compile("<h1 class=\"heading\"><a href=\"(.*?)\"", Pattern.MULTILINE);
-        Matcher m = p.matcher(html);
-        //String str[] = html.split();
-        //System.out.println("SIZE: " + str.length);
-        /*for (String s: str) {
-            System.out.println(s);
-        }*/
+    private void parseHTML(NFWindow window, String html) {
 
-        while (m.find()) {
-            System.out.println(m.group(1));
+        String str[] = html.split("<h[1|2]");
+        //System.out.println("SIZE: " + str.length);
+        for (String s: str) {
+            if (s.contains("class=\"heading\"")) {
+                Pattern p = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.MULTILINE);
+                Matcher m = p.matcher(s);
+                if (m.find()) {
+                    System.out.println("string: " + m.group(2));
+                    //Add to list of headlines
+                    window.addHeadline(this.name + ": " + m.group(2));
+                }
+            }
         }
     }
 }
