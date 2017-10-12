@@ -30,7 +30,7 @@ public class NewsFeed {
                 controller.setWindow(window);
                 window.setVisible(true);
                 // Start download timers
-                controller.startDownloads();
+                controller.initDownloads();
             }
         });
     }

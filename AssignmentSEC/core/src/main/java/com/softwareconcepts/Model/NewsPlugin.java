@@ -8,8 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.ReadableByteChannel;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class NewsPlugin {
 
@@ -17,7 +15,6 @@ public abstract class NewsPlugin {
     protected URL url;
     protected int updateFrequency;
     protected StringBuilder data;
-
 
     public String getName() {
         return name;
@@ -31,6 +28,11 @@ public abstract class NewsPlugin {
         return updateFrequency * 60000 ;
     }
 
+    /**
+     * Downloads the html for a given URL and formats it as a single string.
+     *
+     * @param window    The html to parse formatted as a string.
+     */
     public void download(NFWindow window) {
 
         try(ReadableByteChannel channel = Channels.newChannel(url.openStream())) {
@@ -46,7 +48,9 @@ public abstract class NewsPlugin {
                 buffer.clear();
                 bytesRead = channel.read(buffer);
             }
+            System.out.println(data);
             parseHTML(window, data.toString());
+            data.setLength(0);
         }
         catch (ClosedByInterruptException e) {
 
@@ -56,20 +60,12 @@ public abstract class NewsPlugin {
         }
     }
 
-    private void parseHTML(NFWindow window, String html) {
-
-        String str[] = html.split("<h[1|2]");
-        //System.out.println("SIZE: " + str.length);
-        for (String s: str) {
-            if (s.contains("class=\"heading\"")) {
-                Pattern p = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>", Pattern.MULTILINE);
-                Matcher m = p.matcher(s);
-                if (m.find()) {
-                    System.out.println("string: " + m.group(2));
-                    //Add to list of headlines
-                    window.addHeadline(this.name + ": " + m.group(2));
-                }
-            }
-        }
-    }
+    /**
+     * An abstract helper function that parses html into a Headline object
+     * which is then added to the View list and displayed.
+     *
+     * @param window    A reference to the View (MVC).
+     * @param html      The html to parse formatted as a string.
+     */
+    public abstract void parseHTML(NFWindow window, String html);
 }
