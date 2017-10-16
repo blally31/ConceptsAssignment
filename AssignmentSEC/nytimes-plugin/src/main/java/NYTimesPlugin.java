@@ -12,7 +12,7 @@ public class NYTimesPlugin extends NewsPlugin {
     public NYTimesPlugin() {
 
         this.name = "nytimes.com";
-        this.updateFrequency = 5;
+        this.updateFrequency = 2;
         this.data = new StringBuilder();
 
         try {

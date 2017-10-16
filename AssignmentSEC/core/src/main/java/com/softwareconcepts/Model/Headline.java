@@ -21,6 +21,8 @@ public class Headline implements Comparable<Headline> {
     public String getHeadLine() {
         return this.headline;
     }
+    public String getTime() { return this.dateTime; }
+
 
     public String toString() {
 
@@ -29,7 +31,7 @@ public class Headline implements Comparable<Headline> {
 
     public boolean equals(Headline headline) {
 
-        if (this.headline.equals(headline.getHeadLine())) {
+        if (this.getHeadLine().equals(headline.getHeadLine())) {
             return true;
         }
         return false;
@@ -37,9 +39,9 @@ public class Headline implements Comparable<Headline> {
 
     @Override
     public int compareTo(Headline headline) {
-        //this >
-        if (this.dateTime.compareTo(headline.dateTime) > 0) {
-            return 1;
+
+        /*if (this.dateTime.compareTo(headline.dateTime) > 0) {
+            return -1;
         }
         else if (this.dateTime.compareTo(headline.dateTime) == 0) {
             if (this.headline.compareTo(headline.getHeadLine()) > 0) {
@@ -50,6 +52,14 @@ public class Headline implements Comparable<Headline> {
             }
             return 0;
         }
-        return -1;
+        return 1;*/
+
+        if (this.getHeadLine().equals(headline.getHeadLine())) {
+            return 0;
+        }
+        else if (this.getTime().compareTo(headline.getTime()) > 0) {
+            return -1;
+        }
+        return 1;
     }
 }

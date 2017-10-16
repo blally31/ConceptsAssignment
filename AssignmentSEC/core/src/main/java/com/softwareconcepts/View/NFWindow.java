@@ -33,7 +33,13 @@ public class NFWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //Call method in controller
                 //Probably start a new thread to download page headlines
-                controller.forceDownload();
+                Thread updateThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        controller.forceDownload();
+                    }
+                });
+                updateThread.start();
             }
         });
 
@@ -42,7 +48,7 @@ public class NFWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //Call method in controller
                 //Interrupt the download if (downloading) then cancel else ignore
-
+                controller.cancelDownloads();
             }
         });
 

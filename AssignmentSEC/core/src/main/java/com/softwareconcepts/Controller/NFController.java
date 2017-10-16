@@ -6,8 +6,7 @@ import com.softwareconcepts.View.NFWindow;
 
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.*;
 
 /**
  *
@@ -19,13 +18,17 @@ public class NFController {
     //The controller has instances of the models (plugins) so it can control when and how they are called.
     private LinkedList<NewsPlugin> newsPages;
     private HashSet<NewsPlugin> currentDownloads; // May need to synchronise!!!!!
+    private ScheduledExecutorService scheduler;
+    boolean cancel;
 
     /**
      *  Default constructor.
      */
     public NFController() {
         this.newsPages = new LinkedList<>();
-        currentDownloads = new HashSet<>();
+        this.currentDownloads = new HashSet<>();
+        this.scheduler = Executors.newScheduledThreadPool(10);
+        this.cancel = false;
     }
 
     /**
@@ -53,8 +56,7 @@ public class NFController {
 
         for (NewsPlugin p: newsPages) {
 
-            Timer timer = new Timer(p.getName());
-            timer.scheduleAtFixedRate(new TimerTask() {
+            scheduler.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
                     System.out.println("Adding to downloads set");
@@ -66,29 +68,58 @@ public class NFController {
                     System.out.println("Removing from downloads set");
                     currentDownloads.remove(p);
                     window.removeDownload(p);
-
                 }
-            }, 1000, p.getUpdateFrequency());
+            }, 1, p.getUpdateFrequency(), TimeUnit.SECONDS);
         }
+    }
+
+    public void cancelDownloads() {
+        cancel = true;
     }
 
     public void forceDownload() {
 
-        /*for (NewsPlugin p: newsPages) {
+        ExecutorService update = Executors.newCachedThreadPool();
+
+        for (NewsPlugin p: newsPages) {
 
             //Check the downloading set to see if the website is currently downloading
             if (!currentDownloads.contains(p)) {
                 // download
-                Thread download = new Thread(new Runnable() {
+                Future future = update.submit(new Runnable() {
                     @Override
                     public void run() {
+                        currentDownloads.add(p);
+                        window.addDownload(p);
                         p.download(window);
+                        currentDownloads.remove(p);
+                        window.removeDownload(p);
                     }
                 });
-                download.start();
+                if (cancel) {
+                    future.cancel(true);
+                    System.out.println("canceled future");
+                }
+                else {
+                    try {
+                        System.out.println("getting future");
+                        future.get();
+                    }
+                    catch (ExecutionException e) {
+
+                    }
+                    catch (InterruptedException e) {
+
+                    }
+                }
             }
-        }*/
-        Headline h1 = new Headline("ars", "headline");
+            else {
+                System.out.println("plugin already downloading");
+            }
+        }
+        System.out.println("FORCE HERE");
+        cancel = false; //reset cancel
+        /*Headline h1 = new Headline("ars", "headline");
         Headline h2 = new Headline("ars", "headline1");
         Headline h3 = new Headline("ars", "headline2");
         Headline h4 = new Headline("ars", "headline3");
@@ -97,7 +128,7 @@ public class NFController {
         window.addHeadline(h2);
         window.addHeadline(h3);
         window.addHeadline(h4);
-        window.addHeadline(h5);
+        window.addHeadline(h5);*/
     }
 
 }

@@ -15,12 +15,19 @@ public class NFListModel extends AbstractListModel {
     public void addHeadline(Headline headline) {
 
         if (set.add(headline)) {
-            System.out.println("firecontentschanged");
             fireContentsChanged(this, 0, getSize());
         }
+        //returns false if headline is already in the set
     }
 
-    public void removeHeadline(Headline headline) {
+    public void removeHeadlines(Headline headline) {
+
+        for (Headline h : set) {
+            if (h.equals(headline)) {
+
+            }
+        }
+
         if (set.remove(headline)) {
             fireContentsChanged(this, 0, getSize());
         }

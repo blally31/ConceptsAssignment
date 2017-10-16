@@ -12,7 +12,7 @@ public class ARSPlugin extends NewsPlugin {
     public ARSPlugin() {
 
         this.name = "arstechnica.com";
-        this.updateFrequency = 10;
+        this.updateFrequency = 1;
         this.data = new StringBuilder();
 
         try {

@@ -43,6 +43,7 @@ public class BBCPlugin extends NewsPlugin {
                     System.out.println("string: " + m.group(2));
                     //Create new Headline object and add to window
                     Headline headline = new Headline(this.name, m.group(2));
+
                     //Add to list of headlines
                     window.addHeadline(headline);
                 }

@@ -13,7 +13,7 @@ public abstract class NewsPlugin {
 
     protected String name;
     protected URL url;
-    protected int updateFrequency;
+    protected int updateFrequency; //Minutes
     protected StringBuilder data;
 
     public String getName() {
@@ -25,7 +25,7 @@ public abstract class NewsPlugin {
     }
 
     public int getUpdateFrequency() {
-        return updateFrequency * 60000 ;
+        return updateFrequency * 60;
     }
 
     /**
@@ -47,21 +47,21 @@ public abstract class NewsPlugin {
                 data.append(str);
                 buffer.clear();
                 bytesRead = channel.read(buffer);
+                Thread.sleep(2000);
             }
-            System.out.println(data);
+            //System.out.println(data);
             parseHTML(window, data.toString());
             data.setLength(0);
         }
         catch (ClosedByInterruptException e) {
-
+            Thread.currentThread().interrupt();
         }
         catch (IOException e) {
 
         }
-    }
-
-    public void cancelDownload() {
-
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public String toString(){
