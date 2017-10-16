@@ -60,6 +60,15 @@ public abstract class NewsPlugin {
         }
     }
 
+    public void cancelDownload() {
+
+    }
+
+    public String toString(){
+        return name;
+    }
+
+
     /**
      * An abstract helper function that parses html into a Headline object
      * which is then added to the View list and displayed.

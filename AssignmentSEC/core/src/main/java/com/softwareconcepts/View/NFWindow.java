@@ -2,6 +2,7 @@ package com.softwareconcepts.View;
 
 import com.softwareconcepts.Controller.NFController;
 import com.softwareconcepts.Model.Headline;
+import com.softwareconcepts.Model.NFListModel;
 import com.softwareconcepts.Model.NewsPlugin;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.ActionListener;
 
 public class NFWindow extends JFrame {
 
-    private DefaultListModel<Headline> headlineResults;
+    private NFListModel headlineResults;
     private DefaultListModel<NewsPlugin> downloadResults;
 
     public NFWindow(NFController controller) {
@@ -45,22 +46,34 @@ public class NFWindow extends JFrame {
             }
         });
 
-        headlineResults = new DefaultListModel<>();
+        headlineResults = new NFListModel();
         downloadResults = new DefaultListModel<>();
         JList<Headline> list = new JList<Headline>(headlineResults);
 
-        JScrollPane headlinePanel = new JScrollPane(list);
-        JScrollPane downloadsPanel = new JScrollPane(new JList<NewsPlugin>(downloadResults));
+        Panel headlinePanel = new Panel();
+        headlinePanel.setLayout(new BorderLayout());
+        JScrollPane headlineScroll = new JScrollPane(list);
+        headlinePanel.add(new JLabel("News Headlines", SwingConstants.CENTER), BorderLayout.NORTH);
+        headlinePanel.add(headlineScroll, BorderLayout.CENTER);
+
+        Panel downloadsPanel = new Panel();
+        downloadsPanel.setLayout(new BorderLayout());
+        JScrollPane downloadsScroll = new JScrollPane(new JList<NewsPlugin>(downloadResults));
+        downloadsPanel.add(new JLabel("Current download source", SwingConstants.CENTER), BorderLayout.NORTH);
+        downloadsPanel.add(downloadsScroll, BorderLayout.CENTER);
+
+        Panel listPanel = new Panel();
+        listPanel.setLayout(new BorderLayout());
+        listPanel.add(headlinePanel, BorderLayout.CENTER);
+        listPanel.add(downloadsPanel, BorderLayout.SOUTH);
 
         //Main GUI container that holds all the different panels.
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(0,1));
-        contentPane.add(timePanel);
-        contentPane.add(headlinePanel);
-        contentPane.add(downloadsPanel);
-        contentPane.add(buttonPanel);
-        //pack();
-        setSize(750, 750);
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(timePanel, BorderLayout.NORTH);
+        contentPane.add(listPanel, BorderLayout.CENTER);
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
+        setSize(800, 800);
     }
 
     public void addHeadline(Headline headline) {
@@ -68,13 +81,7 @@ public class NFWindow extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                /*StringBuilder line = new StringBuilder();
-                String time = LocalDateTime.now().format(
-                        DateTimeFormatter.ofLocalizedDateTime(
-                                FormatStyle.MEDIUM, FormatStyle.SHORT));
-
-                line.append(headline + " (" + time +")");*/
-                headlineResults.addElement(headline);
+                headlineResults.addHeadline(headline);
             }
         });
     }
@@ -82,5 +89,10 @@ public class NFWindow extends JFrame {
     public void addDownload(NewsPlugin download) {
 
         downloadResults.addElement(download);
+    }
+
+    public void removeDownload(NewsPlugin download) {
+
+        downloadResults.removeElement(download);
     }
 }

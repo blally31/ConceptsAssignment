@@ -35,7 +35,7 @@ public class BBCPlugin extends NewsPlugin {
         String str[] = html.split("<h[1|2]");
         //System.out.println("SIZE: " + str.length);
         for (String s: str) {
-            if (s.contains("class=\"heading\"")) {
+            if (s.contains("class=\"heading-body\"")) {
                 Pattern p = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>",
                         Pattern.MULTILINE);
                 Matcher m = p.matcher(s);

@@ -1,5 +1,6 @@
 package com.softwareconcepts.Controller;
 
+import com.softwareconcepts.Model.Headline;
 import com.softwareconcepts.Model.NewsPlugin;
 import com.softwareconcepts.View.NFWindow;
 
@@ -14,7 +15,6 @@ import java.util.TimerTask;
 public class NFController {
 
     private NFWindow window = null;
-    private boolean downloading;
     private Object mutex;
     //The controller has instances of the models (plugins) so it can control when and how they are called.
     private LinkedList<NewsPlugin> newsPages;
@@ -26,7 +26,6 @@ public class NFController {
     public NFController() {
         this.newsPages = new LinkedList<>();
         currentDownloads = new HashSet<>();
-        this.downloading = false;
     }
 
     /**
@@ -66,6 +65,7 @@ public class NFController {
                     p.download(window);
                     System.out.println("Removing from downloads set");
                     currentDownloads.remove(p);
+                    window.removeDownload(p);
 
                 }
             }, 1000, p.getUpdateFrequency());
@@ -74,17 +74,30 @@ public class NFController {
 
     public void forceDownload() {
 
-        for (NewsPlugin p: newsPages) {
+        /*for (NewsPlugin p: newsPages) {
 
             //Check the downloading set to see if the website is currently downloading
             if (!currentDownloads.contains(p)) {
                 // download
-
+                Thread download = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        p.download(window);
+                    }
+                });
+                download.start();
             }
-            else {
-                //dont download
-            }
-        }
+        }*/
+        Headline h1 = new Headline("ars", "headline");
+        Headline h2 = new Headline("ars", "headline1");
+        Headline h3 = new Headline("ars", "headline2");
+        Headline h4 = new Headline("ars", "headline3");
+        Headline h5 = new Headline("ars", "headline4");
+        window.addHeadline(h1);
+        window.addHeadline(h2);
+        window.addHeadline(h3);
+        window.addHeadline(h4);
+        window.addHeadline(h5);
     }
 
 }
