@@ -8,9 +8,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
+ * Abstract model class that represents a NewsFeed plugin.
  *
  */
 public abstract class NewsPlugin {
@@ -45,15 +48,24 @@ public abstract class NewsPlugin {
 
             ByteBuffer buffer = ByteBuffer.allocate(65536);
             byte[] array = buffer.array();
-
+            byte[] tmp;
             System.out.println("Reading website");
             int bytesRead = channel.read(buffer);
             while (bytesRead != -1) {
-                String str = new String(array, "UTF-8");
+                String str;
+                //This step is required to remove blank space that will
+                // occur if there is excess space left in the array after
+                // reading a chunk of data.
+                if (array.length > bytesRead) {
+                    tmp = Arrays.copyOf(array, bytesRead);
+                    str = new String(tmp, "UTF-8");
+                }
+                else {
+                    str = new String(array, "UTF-8");
+                }
                 data.append(str);
                 buffer.clear();
                 bytesRead = channel.read(buffer);
-                //Thread.sleep(2000);
             }
             //System.out.println(data);
             parseHTML(window, data.toString());
@@ -65,26 +77,30 @@ public abstract class NewsPlugin {
             System.out.println(Thread.currentThread().getName() +
                     " ClosedByInterruptException");
             data.setLength(0);
-            //Thread.currentThread().interrupt();
         }
         catch (IOException e) {
 
         }
-        /*catch (InterruptedException e) {
-            System.out.println(Thread.currentThread().getName() +
-                    " InterruptedException");
-            e.printStackTrace();
-        }*/
     }
 
+    /**
+     * Checks whether the downloaded headlines need to be added or
+     * removed before updating the view's list model.
+     */
     protected void checkHeadlines() {
-
+        ArrayList<String> found = new ArrayList<>();
+        //Remove headlines that are no longer displayed
         for (String head : previousHeadlines.keySet()) {
             if (!currentHeadlines.containsKey(head)) {
                 System.out.println("Removing Headline: " + head);
-                previousHeadlines.remove(head);
+                found.add(head);
             }
         }
+        //Intermediate step for removing expired headlines
+        for (String str: found) {
+            previousHeadlines.remove(str);
+        }
+        //Add new headlines
         for (String head : currentHeadlines.keySet()) {
             if (!previousHeadlines.containsKey(head)) {
                 System.out.println("Adding Headline: " + head);

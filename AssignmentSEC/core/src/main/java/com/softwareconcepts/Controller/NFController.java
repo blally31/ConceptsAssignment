@@ -1,6 +1,5 @@
 package com.softwareconcepts.Controller;
 
-import com.softwareconcepts.Model.Headline;
 import com.softwareconcepts.Model.NewsPlugin;
 import com.softwareconcepts.View.NFWindow;
 
@@ -9,13 +8,14 @@ import java.util.LinkedList;
 import java.util.concurrent.*;
 
 /**
+ * Controller class that holds the logic for scheduling downloads, forcing
+ * update downloads and cancelling downloads.
+ *
  *
  */
 public class NFController {
 
     private NFWindow window = null;
-    private Object mutex;
-    //The controller has instances of the models (plugins) so it can control when and how they are called.
     private LinkedList<NewsPlugin> newsPages;
     private HashSet<NewsPlugin> currentDownloads; // May need to synchronise!!!!!
     private ScheduledExecutorService scheduler;
@@ -104,7 +104,6 @@ public class NFController {
     /**
      * Method that forces an immediate download from all news sources
      * if the update button is pressed.
-     *
      */
     public void updateDownloads() {
 

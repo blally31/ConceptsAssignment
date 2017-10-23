@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ *
+ */
 public class NFListModel extends AbstractListModel {
 
     private ConcurrentHashMap<String, Headline> listModelMap;
@@ -44,21 +47,6 @@ public class NFListModel extends AbstractListModel {
         fireContentsChanged(this, 0, getSize());
     }
 
-    /*private void removeOldHeadlines(HashMap<String, Headline> map) {
-        System.out.println("Top of removeOldHeadlines");
-        for (String str : listModelMap.keySet()) {
-            if (!map.containsKey(str)) {
-                System.out.println("Removing an old headline");
-                listModelMap.remove(str);
-                listModel.remove(listModelMap.get(str));
-                fireContentsChanged(this, 0, getSize());
-            }
-            else {
-                System.out.println("Set already contains");
-            }
-        }
-    }
-*/
     public boolean isEmpty() {
         if (listModelMap.isEmpty()) {
             return true;

@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * A custom Jpanel to display the current time and date.
+ */
 public class TimePanel extends JPanel {
 
     private JLabel timeValue;

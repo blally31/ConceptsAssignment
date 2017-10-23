@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *
+ */
 public class ARSPlugin extends NewsPlugin {
 
     public ARSPlugin() {
@@ -53,8 +56,6 @@ public class ARSPlugin extends NewsPlugin {
             }
         }
         checkHeadlines();
-        /*String name = "Report: Twitter CEO took a Russian impostor's bait in 2016";
-        currentHeadlines.put(name, new Headline("www.arstechnica.com", name));*/
         window.addHeadline(previousHeadlines);
     }
 }

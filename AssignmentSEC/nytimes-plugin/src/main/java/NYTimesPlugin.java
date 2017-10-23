@@ -54,6 +54,6 @@ public class NYTimesPlugin extends NewsPlugin {
             }
         }
         checkHeadlines();
-        window.addHeadline(currentHeadlines);
+        window.addHeadline(previousHeadlines);
     }
 }

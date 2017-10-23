@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ *
+ */
 public class Headline implements Comparable<Headline> {
 
     private String website;
@@ -21,7 +24,6 @@ public class Headline implements Comparable<Headline> {
         return this.headline;
     }
     public LocalDateTime getTime() { return this.dateTime; }
-
 
     public String toString() {
 
