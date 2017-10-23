@@ -4,6 +4,7 @@ import com.softwareconcepts.View.NFWindow;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ public class BBCPlugin extends NewsPlugin {
         this.name = "BBCPlugin";
         this.updateFrequency = 15;
         this.data = new StringBuilder();
+        this.currentHeadlines = new HashMap<>();
 
         try {
             this.url = new URL("http://www.bbc.co.uk/news/");
@@ -31,7 +33,7 @@ public class BBCPlugin extends NewsPlugin {
      * @param html      The html to parse formatted as a string.
      */
     public void parseHTML(NFWindow window, String html) {
-
+        currentHeadlines.clear();
         String str[] = html.split("<h[1|2]");
         //System.out.println("SIZE: " + str.length);
         for (String s: str) {
@@ -44,10 +46,12 @@ public class BBCPlugin extends NewsPlugin {
                     //Create new Headline object and add to window
                     Headline headline = new Headline(this.name, m.group(2));
 
-                    //Add to list of headlines
-                    window.addHeadline(headline);
+                    if (!currentHeadlines.containsKey(headline.getHeadLine())) {
+                        currentHeadlines.put(headline.getHeadLine(), headline);
+                    }
                 }
             }
         }
+        window.addHeadline(currentHeadlines);
     }
 }

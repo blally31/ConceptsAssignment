@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class NFWindow extends JFrame {
 
@@ -36,7 +37,7 @@ public class NFWindow extends JFrame {
                 Thread updateThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        controller.forceDownload();
+                        controller.updateDownloads();
                     }
                 });
                 updateThread.start();
@@ -82,12 +83,12 @@ public class NFWindow extends JFrame {
         setSize(800, 800);
     }
 
-    public void addHeadline(Headline headline) {
+    public void addHeadline(HashMap<String, Headline> headlines) {
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                headlineResults.addHeadline(headline);
+                headlineResults.updateHeadlines(headlines);
             }
         });
     }

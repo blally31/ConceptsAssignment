@@ -19,7 +19,8 @@ public class NFController {
     private LinkedList<NewsPlugin> newsPages;
     private HashSet<NewsPlugin> currentDownloads; // May need to synchronise!!!!!
     private ScheduledExecutorService scheduler;
-    boolean cancel;
+    private LinkedList<Future> futureList;
+    private boolean isScheduled;
 
     /**
      *  Default constructor.
@@ -28,7 +29,8 @@ public class NFController {
         this.newsPages = new LinkedList<>();
         this.currentDownloads = new HashSet<>();
         this.scheduler = Executors.newScheduledThreadPool(10);
-        this.cancel = false;
+        futureList = new LinkedList<>();
+        this.isScheduled = false;
     }
 
     /**
@@ -50,40 +52,68 @@ public class NFController {
     }
 
     /**
-     *
+     * Method that schedules periodic downloads from the set of sources
+     * provided at runtime. Scheduling frequency is provided by the
+     * individual source plugin classes.
      */
     public void initDownloads() {
 
+        futureList.clear();
         for (NewsPlugin p: newsPages) {
 
-            scheduler.scheduleAtFixedRate(new Runnable() {
+            ScheduledFuture future = scheduler.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Adding to downloads set");
+
                     currentDownloads.add(p);
+                    isScheduled = true;
                     window.addDownload(p);
                     System.out.println("Starting download: " + p.getName());
                     System.out.println("URL: " + p.getURL());
                     p.download(window);
-                    System.out.println("Removing from downloads set");
                     currentDownloads.remove(p);
+                    isScheduled = false;
                     window.removeDownload(p);
                 }
             }, 1, p.getUpdateFrequency(), TimeUnit.SECONDS);
+            futureList.add(future);
         }
     }
 
-    public void cancelDownloads() {
-        cancel = true;
+    /**
+     * Method that cancels all currently downloading sources if the
+     * cancel button is pressed. If the downloading source is a scheduled
+     * source, then it is rescheduled.
+     */
+    public void cancelDownloads() { //Add a strategy pattern classes so don't need future isScheduled flag.
+
+        if (!currentDownloads.isEmpty()) {
+            System.out.println("Cancelling Downloads. Future list size: " + futureList.size());
+            for (Future f: futureList) {
+                f.cancel(true);
+            }
+        }
+        //If the downloads to be cancelled are the scheduled downloads,
+        //need to reschedule.
+        if (isScheduled) {
+            System.out.println("Rescheduling Downloads");
+            initDownloads();
+        }
     }
 
-    public void forceDownload() {
+    /**
+     * Method that forces an immediate download from all news sources
+     * if the update button is pressed.
+     *
+     */
+    public void updateDownloads() {
 
         ExecutorService update = Executors.newCachedThreadPool();
-
+        futureList.clear();
         for (NewsPlugin p: newsPages) {
 
-            //Check the downloading set to see if the website is currently downloading
+            //Check the downloading set to see if the website is
+            // currently downloading
             if (!currentDownloads.contains(p)) {
                 // download
                 Future future = update.submit(new Runnable() {
@@ -96,39 +126,11 @@ public class NFController {
                         window.removeDownload(p);
                     }
                 });
-                if (cancel) {
-                    future.cancel(true);
-                    System.out.println("canceled future");
-                }
-                else {
-                    try {
-                        System.out.println("getting future");
-                        future.get();
-                    }
-                    catch (ExecutionException e) {
-
-                    }
-                    catch (InterruptedException e) {
-
-                    }
-                }
+                futureList.add(future);
             }
             else {
                 System.out.println("plugin already downloading");
             }
         }
-        System.out.println("FORCE HERE");
-        cancel = false; //reset cancel
-        /*Headline h1 = new Headline("ars", "headline");
-        Headline h2 = new Headline("ars", "headline1");
-        Headline h3 = new Headline("ars", "headline2");
-        Headline h4 = new Headline("ars", "headline3");
-        Headline h5 = new Headline("ars", "headline4");
-        window.addHeadline(h1);
-        window.addHeadline(h2);
-        window.addHeadline(h3);
-        window.addHeadline(h4);
-        window.addHeadline(h5);*/
     }
-
 }

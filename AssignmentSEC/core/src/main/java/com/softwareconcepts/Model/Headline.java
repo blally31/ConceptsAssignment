@@ -8,25 +8,26 @@ public class Headline implements Comparable<Headline> {
 
     private String website;
     private String headline;
-    private String dateTime;
+    //private String dateTime;
+    private LocalDateTime dateTime;
 
     public Headline(String website, String headline) {
         this.website = website;
         this.headline = headline;
-        this.dateTime = LocalDateTime.now().format(
-                DateTimeFormatter.ofLocalizedDateTime(
-                        FormatStyle.MEDIUM, FormatStyle.SHORT));
+        this.dateTime = LocalDateTime.now();
     }
 
     public String getHeadLine() {
         return this.headline;
     }
-    public String getTime() { return this.dateTime; }
+    public LocalDateTime getTime() { return this.dateTime; }
 
 
     public String toString() {
 
-        return website + ":  " + headline + "  (" + dateTime + ")";
+        return website + ":  " + headline + "  (" + dateTime.format(
+                DateTimeFormatter.ofLocalizedDateTime(
+                        FormatStyle.MEDIUM, FormatStyle.SHORT)) + ")";
     }
 
     public boolean equals(Headline headline) {
@@ -38,28 +39,15 @@ public class Headline implements Comparable<Headline> {
     }
 
     @Override
-    public int compareTo(Headline headline) {
-
-        /*if (this.dateTime.compareTo(headline.dateTime) > 0) {
+    public int compareTo(Headline h) {
+        if (this.getTime().isBefore(h.getTime())) {
+            return 1;
+        }
+        else if (this.getTime().isAfter(h.getTime())) {
             return -1;
         }
-        else if (this.dateTime.compareTo(headline.dateTime) == 0) {
-            if (this.headline.compareTo(headline.getHeadLine()) > 0) {
-                return 1;
-            }
-            else if (this.headline.compareTo(headline.getHeadLine()) < 0) {
-                return-1;
-            }
+        else {
             return 0;
         }
-        return 1;*/
-
-        if (this.getHeadLine().equals(headline.getHeadLine())) {
-            return 0;
-        }
-        else if (this.getTime().compareTo(headline.getTime()) > 0) {
-            return -1;
-        }
-        return 1;
     }
 }

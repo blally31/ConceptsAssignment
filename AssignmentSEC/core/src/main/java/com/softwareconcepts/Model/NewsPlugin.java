@@ -8,13 +8,19 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.ReadableByteChannel;
+import java.util.HashMap;
 
+/**
+ *
+ */
 public abstract class NewsPlugin {
 
-    protected String name;
-    protected URL url;
-    protected int updateFrequency; //Minutes
+    protected String name; // Website name
+    protected URL url; // Website URL
+    protected int updateFrequency; // Minutes
     protected StringBuilder data;
+    protected HashMap<String, Headline> currentHeadlines; // List of current headlines.
+    protected HashMap<String, Headline> previousHeadlines; // List of current headlines.
 
     public String getName() {
         return name;
@@ -47,20 +53,43 @@ public abstract class NewsPlugin {
                 data.append(str);
                 buffer.clear();
                 bytesRead = channel.read(buffer);
-                Thread.sleep(2000);
+                //Thread.sleep(2000);
             }
             //System.out.println(data);
             parseHTML(window, data.toString());
             data.setLength(0);
         }
+        // ClosedByInterruptException is thrown if thread is cancelled in
+        // read() function.
         catch (ClosedByInterruptException e) {
-            Thread.currentThread().interrupt();
+            System.out.println(Thread.currentThread().getName() +
+                    " ClosedByInterruptException");
+            data.setLength(0);
+            //Thread.currentThread().interrupt();
         }
         catch (IOException e) {
 
         }
-        catch (InterruptedException e) {
+        /*catch (InterruptedException e) {
+            System.out.println(Thread.currentThread().getName() +
+                    " InterruptedException");
             e.printStackTrace();
+        }*/
+    }
+
+    protected void checkHeadlines() {
+
+        for (String head : previousHeadlines.keySet()) {
+            if (!currentHeadlines.containsKey(head)) {
+                System.out.println("Removing Headline: " + head);
+                previousHeadlines.remove(head);
+            }
+        }
+        for (String head : currentHeadlines.keySet()) {
+            if (!previousHeadlines.containsKey(head)) {
+                System.out.println("Adding Headline: " + head);
+                previousHeadlines.put(head, currentHeadlines.get(head));
+            }
         }
     }
 
