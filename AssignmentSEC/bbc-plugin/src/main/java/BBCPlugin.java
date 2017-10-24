@@ -8,14 +8,18 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ *
+ */
 public class BBCPlugin extends NewsPlugin {
 
     public BBCPlugin() {
 
         this.name = "BBCPlugin";
-        this.updateFrequency = 15;
+        this.updateFrequency = 1;
         this.data = new StringBuilder();
         this.currentHeadlines = new HashMap<>();
+        this.previousHeadlines = new HashMap<>();
 
         try {
             this.url = new URL("http://www.bbc.co.uk/news/");
@@ -34,24 +38,31 @@ public class BBCPlugin extends NewsPlugin {
      */
     public void parseHTML(NFWindow window, String html) {
         currentHeadlines.clear();
-        String str[] = html.split("<h[1|2]");
-        //System.out.println("SIZE: " + str.length);
+
+        String str[] = html.split("<div class");
         for (String s: str) {
-            if (s.contains("class=\"heading-body\"")) {
-                Pattern p = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>",
+            if (s.contains("<h3 class=\"gs-c")) {
+                Pattern p = Pattern.compile("<h3 class=\"(.*?)\">(.*?)</h3>",
                         Pattern.MULTILINE);
                 Matcher m = p.matcher(s);
                 if (m.find()) {
-                    System.out.println("string: " + m.group(2));
-                    //Create new Headline object and add to window
-                    Headline headline = new Headline(this.name, m.group(2));
-
-                    if (!currentHeadlines.containsKey(headline.getHeadLine())) {
-                        currentHeadlines.put(headline.getHeadLine(), headline);
+                    Headline headline;
+                    if (m.group(2).contains("&#x27;"))
+                    {
+                        String line = m.group(2).replace("&#x27;", "'");
+                        //Create new Headline object and add to window
+                        headline = new Headline(this.name, line);
                     }
+                    else {
+                        headline = new Headline(this.name, m.group(2));
+                    }
+                    if (previousHeadlines.isEmpty()) {
+                        previousHeadlines.put(headline.getHeadLine(), headline);
+                    }
+                    currentHeadlines.put(headline.getHeadLine(), headline);
                 }
             }
         }
-        window.addHeadline(currentHeadlines);
+        window.addHeadlines(currentHeadlines);
     }
 }

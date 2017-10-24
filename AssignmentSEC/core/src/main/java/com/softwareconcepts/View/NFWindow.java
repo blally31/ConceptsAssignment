@@ -83,7 +83,7 @@ public class NFWindow extends JFrame {
         setSize(800, 800);
     }
 
-    public void addHeadline(HashMap<String, Headline> headlines) {
+    public void addHeadlines(HashMap<String, Headline> headlines) {
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override

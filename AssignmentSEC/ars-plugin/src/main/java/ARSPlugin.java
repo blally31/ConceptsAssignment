@@ -16,7 +16,7 @@ public class ARSPlugin extends NewsPlugin {
     public ARSPlugin() {
 
         this.name = "arstechnica.com";
-        this.updateFrequency = 1;
+        this.updateFrequency = 2;
         this.data = new StringBuilder();
         this.currentHeadlines = new HashMap<>();
         this.previousHeadlines = new HashMap<>();
@@ -39,7 +39,7 @@ public class ARSPlugin extends NewsPlugin {
     public void parseHTML(NFWindow window, String html) {
         currentHeadlines.clear(); //currentHeadlines should be refreshed each download.
 
-        String str[] = html.split("<h[1|2|3]");
+        String str[] = html.split("<h[1|2]");
         for (String s: str) {
             if (s.contains("class=\"heading\"")) {
                 Pattern p = Pattern.compile("<a href=\"(.*?)\">(.*?)</a>",
@@ -56,6 +56,6 @@ public class ARSPlugin extends NewsPlugin {
             }
         }
         checkHeadlines();
-        window.addHeadline(previousHeadlines);
+        window.addHeadlines(previousHeadlines);
     }
 }

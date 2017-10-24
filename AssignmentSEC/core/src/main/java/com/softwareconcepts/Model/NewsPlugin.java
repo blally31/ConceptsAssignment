@@ -22,8 +22,8 @@ public abstract class NewsPlugin {
     protected URL url; // Website URL
     protected int updateFrequency; // Minutes
     protected StringBuilder data;
-    protected HashMap<String, Headline> currentHeadlines; // List of current headlines.
-    protected HashMap<String, Headline> previousHeadlines; // List of current headlines.
+    protected HashMap<String, Headline> currentHeadlines;
+    protected HashMap<String, Headline> previousHeadlines;
 
     public String getName() {
         return name;
@@ -63,6 +63,7 @@ public abstract class NewsPlugin {
                 else {
                     str = new String(array, "UTF-8");
                 }
+                //System.out.println(str);
                 data.append(str);
                 buffer.clear();
                 bytesRead = channel.read(buffer);
@@ -112,7 +113,6 @@ public abstract class NewsPlugin {
     public String toString(){
         return name;
     }
-
 
     /**
      * An abstract helper function that parses html into a Headline object

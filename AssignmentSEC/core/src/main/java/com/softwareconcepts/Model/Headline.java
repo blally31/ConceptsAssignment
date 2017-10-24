@@ -11,7 +11,6 @@ public class Headline implements Comparable<Headline> {
 
     private String website;
     private String headline;
-    //private String dateTime;
     private LocalDateTime dateTime;
 
     public Headline(String website, String headline) {

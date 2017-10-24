@@ -3,6 +3,7 @@ package com.softwareconcepts.Controller;
 import com.softwareconcepts.Model.NewsPlugin;
 import com.softwareconcepts.View.NFWindow;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.concurrent.*;
@@ -10,8 +11,6 @@ import java.util.concurrent.*;
 /**
  * Controller class that holds the logic for scheduling downloads, forcing
  * update downloads and cancelling downloads.
- *
- *
  */
 public class NFController {
 
@@ -19,8 +18,8 @@ public class NFController {
     private LinkedList<NewsPlugin> newsPages;
     private HashSet<NewsPlugin> currentDownloads; // May need to synchronise!!!!!
     private ScheduledExecutorService scheduler;
-    private LinkedList<Future> futureList;
-    private boolean isScheduled;
+    private HashMap<NewsPlugin, Future> schedFutureList;
+    private HashMap<NewsPlugin, Future> updateFutureList;
 
     /**
      *  Default constructor.
@@ -29,8 +28,8 @@ public class NFController {
         this.newsPages = new LinkedList<>();
         this.currentDownloads = new HashSet<>();
         this.scheduler = Executors.newScheduledThreadPool(10);
-        futureList = new LinkedList<>();
-        this.isScheduled = false;
+        this.schedFutureList = new HashMap<>();
+        this.updateFutureList = new HashMap<>();
     }
 
     /**
@@ -52,52 +51,68 @@ public class NFController {
     }
 
     /**
-     * Method that schedules periodic downloads from the set of sources
-     * provided at runtime. Scheduling frequency is provided by the
-     * individual source plugin classes.
+     * Method that initially schedules periodic downloads from the set
+     * of sources provided at runtime.
      */
     public void initDownloads() {
 
-        futureList.clear();
         for (NewsPlugin p: newsPages) {
-
-            ScheduledFuture future = scheduler.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-
-                    currentDownloads.add(p);
-                    isScheduled = true;
-                    window.addDownload(p);
-                    System.out.println("Starting download: " + p.getName());
-                    System.out.println("URL: " + p.getURL());
-                    p.download(window);
-                    currentDownloads.remove(p);
-                    isScheduled = false;
-                    window.removeDownload(p);
-                }
-            }, 1, p.getUpdateFrequency(), TimeUnit.SECONDS);
-            futureList.add(future);
+            scheduleDownload(p, 1);
         }
     }
 
     /**
-     * Method that cancels all currently downloading sources if the
-     * cancel button is pressed. If the downloading source is a scheduled
-     * source, then it is rescheduled.
+     * Schedules a given plugin to download. The scheduling frequency is
+     * provided by the individual source plugin classes.
+     *
+     * @param plugin    A news source plugin.
      */
-    public void cancelDownloads() { //Add a strategy pattern classes so don't need future isScheduled flag.
-
-        if (!currentDownloads.isEmpty()) {
-            System.out.println("Cancelling Downloads. Future list size: " + futureList.size());
-            for (Future f: futureList) {
-                f.cancel(true);
+    private void scheduleDownload(NewsPlugin plugin, int delay) {
+        System.out.println("Scheduling plugin: " + plugin.getName());
+        ScheduledFuture future = scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                download(plugin);
             }
+        }, delay, plugin.getUpdateFrequency(), TimeUnit.SECONDS);
+        schedFutureList.put(plugin, future);
+    }
+
+    private void download(NewsPlugin plugin) {
+        //This is to prevent simultaneous downloads from the same source.
+        if (!currentDownloads.contains(plugin)) {
+            currentDownloads.add(plugin);
+            window.addDownload(plugin);
+            plugin.download(window);
+            currentDownloads.remove(plugin);
+            window.removeDownload(plugin);
+            updateFutureList.clear();
         }
-        //If the downloads to be cancelled are the scheduled downloads,
-        //need to reschedule.
-        if (isScheduled) {
-            System.out.println("Rescheduling Downloads");
-            initDownloads();
+    }
+
+    /**
+     * Cancels all currently downloading sources if the cancel button
+     * is pressed. If the downloading source is a scheduled source, then
+     * it is rescheduled.
+     */
+    public void cancelDownloads() {
+
+        System.out.println("SCHED: " + schedFutureList.size());
+        System.out.println("UPDATE: " + updateFutureList.size());
+        for (NewsPlugin p: currentDownloads) {
+            if (updateFutureList.isEmpty()) {
+                if (schedFutureList.containsKey(p)) {
+                    schedFutureList.remove(p).cancel(true);
+                    System.out.println("CANCELLED SCHEDULED " + p.getName());
+                    scheduleDownload(p, p.getUpdateFrequency());
+                }
+            }
+            else {
+                if (updateFutureList.containsKey(p)) {
+                    updateFutureList.remove(p).cancel(true);
+                    System.out.println("CANCELLED UPDATE" + p.getName());
+                }
+            }
         }
     }
 
@@ -106,29 +121,22 @@ public class NFController {
      * if the update button is pressed.
      */
     public void updateDownloads() {
-
+        updateFutureList.clear();
         ExecutorService update = Executors.newCachedThreadPool();
-        futureList.clear();
         for (NewsPlugin p: newsPages) {
-
             //Check the downloading set to see if the website is
-            // currently downloading
+            //currently downloading. This is to prevent simultaneous
+            //downloads from the same source.
             if (!currentDownloads.contains(p)) {
                 // download
                 Future future = update.submit(new Runnable() {
                     @Override
                     public void run() {
-                        currentDownloads.add(p);
-                        window.addDownload(p);
-                        p.download(window);
-                        currentDownloads.remove(p);
-                        window.removeDownload(p);
+                        download(p);
                     }
                 });
-                futureList.add(future);
-            }
-            else {
-                System.out.println("plugin already downloading");
+                System.out.println("Adding to updatelist: " + p);
+                updateFutureList.put(p, future);
             }
         }
     }
